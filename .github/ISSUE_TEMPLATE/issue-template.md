@@ -1,5 +1,6 @@
 ---
 name: Issue Template
+about: 이슈템플릿
 title: "[태그(소문자)] 이슈 제목"
 labels: ''
 assignees: ''
