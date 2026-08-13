@@ -10,7 +10,7 @@ import Foundation
 
 /// A description of the modules that the app can present.
 enum Module: String, Identifiable, CaseIterable, Equatable {
-    case globe, orbit, solar
+    case solar
     var id: Self { self }
     var name: String { rawValue.capitalized }
 
