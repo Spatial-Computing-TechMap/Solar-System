@@ -15,9 +15,12 @@ struct SolarSystemApp: App {
     var body: some Scene {
         WindowGroup {
             /// 여기에 바로 태양계 설명하는 화면 들어갈 수 있도록 (나중에 내용 수정하기)
-            SolarCard(module: .solar)
+//            SolarCard(module: .solar)
+//                .environment(model)
+            SwitchWindows()
                 .environment(model)
         }
+        .windowStyle(.automatic)
 
         ImmersiveSpace(id: model.immersiveSpaceID) {
 //            ImmersiveView()
