@@ -11,7 +11,6 @@ struct SwitchWindows: View {
     @Environment(AppModel.self) private var model
     
     var body: some View {
-        @Bindable var model = model
         ZStack {
             SolarSystemControls() /// full
                 .opacity(model.isShowingSolar ? 1 : 0)
