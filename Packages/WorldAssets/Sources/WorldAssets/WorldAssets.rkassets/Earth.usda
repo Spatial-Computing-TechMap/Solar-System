@@ -7,7 +7,7 @@
 
 def Xform "Root"
 {
-    reorder nameChildren = ["", "", "", "Clouds", "Earth", "earth_004_clouds_resized"]
+    reorder nameChildren = ["Earth", "Venus", "Saturn", "Mars"]
     def "Earth" (
         customData = {
             float3 rotationEulerHint = (-1.5707963, 0, 0)
