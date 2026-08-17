@@ -25,6 +25,8 @@ struct Sun: View {
 
             content.add(sun)
             self.sun = sun
+            sun.components.set(PointLightComponent(color: .white, intensity: 1_000_000, attenuationRadius: 40))
+
             configure()
 
         } update: { content in
