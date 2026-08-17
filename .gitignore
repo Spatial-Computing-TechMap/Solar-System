@@ -62,3 +62,7 @@ fastlane/screenshots/**/*.png
 fastlane/test_output
 *.xcuserstate
 xcuserdata/
+.DS_Store
+
+saerom.rcuserdata
+xcschememanagement.plist
