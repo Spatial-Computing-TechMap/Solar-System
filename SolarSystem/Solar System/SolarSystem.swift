@@ -23,17 +23,30 @@ struct SolarSystem: View {
 
     var body: some View {
         ZStack {
-            Earth(
-                earthConfiguration: model.solarEarth,
-                satelliteConfiguration: [model.solarSatellite],
-                moonConfiguration: model.solarMoon
-            )
+//            Earth(
+//                earthConfiguration: model.solarEarth,
+//                satelliteConfiguration: [model.solarSatellite],
+//                moonConfiguration: model.solarMoon
+//            )
 
             Sun(
-                scale: 50,
+                scale: model.solarSunScale,
                 position: model.solarSunPosition
             )
-            
+
+//            ForEach(model.solarPlanets.filter { $0.name != "Earth" }, id: \.name) { planet in
+            ForEach(model.solarPlanets, id: \.name) { planet in
+                Planet(
+                    name: planet.name,
+                    scale: planet.scale(
+                        worldRadiusPerKm: model.worldRadiusPerKm,
+                        minWorldRadius: model.minPlanetScale,
+                        maxWorldRadius: model.maxPlanetScale
+                    ),
+                    position: planet.position(around: model.solarSunPosition, spacingPerOrder: model.spacingPerOrder)
+                )
+            }
+
             Starfield()
         }
         .onAppear {

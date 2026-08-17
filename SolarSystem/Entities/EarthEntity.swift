@@ -69,6 +69,11 @@ class EarthEntity: Entity {
         self.earth = earth
         self.pole = pole
 
+        // 태양 반대쪽(야간면)이 완전히 새까맣게 되지 않도록, 구 중심에 아주 약한 point light를
+        // 추가해서 최소 밝기(ambient floor)를 준다. 구 중심에 두면 표면 어느 지점이든 빛까지의
+        // 거리와 각도가 거의 동일해서, 방향(sun_angle)에 상관없이 고르게 밝아진다.
+        earth.components.set(PointLightComponent(color: .white, intensity: 3000, attenuationRadius: 5))
+
         // Create satellites.
         for configuration in satelliteConfiguration {
             await satellites.addChild(SatelliteEntity(configuration))
@@ -157,11 +162,7 @@ class EarthEntity: Entity {
             configuration.poleLength,
             configuration.poleThickness]
 
-        // Set the sunlight, if corresponding controls have changed.
-        if configuration.currentSunIntensity != currentSunIntensity {
-            setSunlight(intensity: configuration.currentSunIntensity)
-            currentSunIntensity = configuration.currentSunIntensity
-        }
+        currentSunIntensity = configuration.currentSunIntensity
 
         // Tilt the axis according to a date. For this to be meaningful,
         // locate the sun along the positive x-axis. Animate this move for

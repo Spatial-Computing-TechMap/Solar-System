@@ -37,7 +37,7 @@ extension EarthEntity {
         var currentSunIntensity: Float? {
             showSun ? sunIntensity : nil
         }
-
+        
         static var globeEarthDefault: Configuration = .init(
             axActions: AccessibilityActions.rotate,
             axDescribeTilt: true
@@ -51,9 +51,8 @@ extension EarthEntity {
 
         static var solarEarthDefault: Configuration = .init(
             isCloudy: true,
-            scale: 4.6,
             speed: 0.045,
-            position: [-2, 0.4, -5],
+            // scale/position/sunAngle은 AppModel.init()에서 계산해서 덮어씀.
             date: Date())
     }
 
