@@ -66,3 +66,6 @@ xcuserdata/
 
 saerom.rcuserdata
 xcschememanagement.plist
+
+# DocC preview output
+.docc-build/
