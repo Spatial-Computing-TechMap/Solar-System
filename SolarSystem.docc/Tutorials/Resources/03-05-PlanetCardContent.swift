@@ -3,7 +3,7 @@ import RealityKit
 import WorldAssets
 
 /// The content shown for one placed planet: its 3D model, and (on tap) a
-/// description card depth-aligned in front of it.
+/// description card depth-aligned beside it.
 ///
 /// Positioning in the scene happens outside this view — SolarSystem.swift
 /// places this as a RealityView attachment using ordinary RealityKit
@@ -20,7 +20,7 @@ struct PlanetCardContent: View {
     }
 
     var body: some View {
-        VStackLayout().depthAlignment(.front) {
+        HStackLayout().depthAlignment(.center) {
             Model3D(named: name, bundle: worldAssetsBundle) { model in
                 model
                     .resizable()

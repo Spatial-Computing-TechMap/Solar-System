@@ -2,7 +2,7 @@
     @Intro(title: "Planet Info Cards") {
         Replace the placeholder label from the previous chapter with `PlanetCardContent`: a view that loads each planet's real 3D model and reveals an info card when tapped.
 
-        @Image(source: 03-intro.png, alt: "A 3D model of a planet with a glass information card floating in front of it.")
+        @Image(source: 03-intro.png, alt: "A 3D model of a planet with a glass information card floating beside it.")
     }
 
     @Section(title: "Load the planet's 3D model") {
@@ -42,13 +42,13 @@
             }
 
             @Step {
-                Look up the planet's heading and description with `PlanetInfo.info(for:)`, and show them in a `VStack` with `.glassBackgroundEffect()` when `isCardShown` is `true`.
+                Look up the planet's heading and description with `PlanetInfo.info(for:)`, and show them in an `HStack` alongside the model, with the text itself laid out in a `VStack` with `.glassBackgroundEffect()`, when `isCardShown` is `true`.
 
                 @Code(file: 03-04-PlanetCardContent.swift, name: "PlanetCardContent.swift")
             }
 
             @Step {
-                Wrap the model and the card in `VStackLayout().depthAlignment(.front)` so the card is depth-aligned in front of the planet instead of floating behind it. This is the completed file.
+                Swap the plain `HStack` for `HStackLayout().depthAlignment(.center)` so the flat card's depth is centered against the model's `.frame(depth:)` volume instead of defaulting to zero depth. This is the completed file.
 
                 @Code(file: 03-05-PlanetCardContent.swift, name: "PlanetCardContent.swift")
             }
@@ -70,7 +70,7 @@
             }
 
             @Step {
-                Build and run. Enter the immersive space, tap any planet, and confirm its info card appears in front of it and toggles off on a second tap.
+                Build and run. Enter the immersive space, tap any planet, and confirm its info card appears beside it and toggles off on a second tap.
 
                 @Image(source: 03-04-complete.png, alt: "The finished app showing a tapped planet with its information card open.")
             }

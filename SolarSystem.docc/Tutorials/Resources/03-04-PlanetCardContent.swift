@@ -15,7 +15,7 @@ struct PlanetCardContent: View {
     }
 
     var body: some View {
-        VStack {
+        HStack {
             Model3D(named: name, bundle: worldAssetsBundle) { model in
                 model
                     .resizable()
