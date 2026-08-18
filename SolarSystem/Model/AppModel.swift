@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import RealityKit
 
 /// Maintains app-wide state
 @MainActor
@@ -51,9 +50,6 @@ class AppModel {
     var minPlanetScale: Float = 0.08
     var maxPlanetScale: Float = 1.2
 
-    var loadedPlanetEntities: [String: Entity] = [:]
-    var openPlanetCardNames: Set<String> = []
-    
     var solarPlanets: [PlanetConfiguration] = [
         .init(name: "Mercury", order: 1, radiusKm: 2439.7, orbitAngle: .degrees(45)),
         .init(name: "Venus",   order: 2, radiusKm: 6051.8, orbitAngle: .degrees(90)),
