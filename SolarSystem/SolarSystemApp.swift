@@ -23,7 +23,16 @@ struct SolarSystemApp: App {
                 .environment(model)
         }
         .windowStyle(.plain)
-        
+
+        // 행성 탭 시 뜨는 상세 창. planetName을 value로 받아서 어떤 행성인지 구분한다.
+        WindowGroup(id: "PlanetDetail", for: String.self) { $planetName in
+            if let planetName {
+                PlanetCardView(planetName: planetName)
+                    .environment(model)
+            }
+        }
+        .windowStyle(.volumetric)
+
         ImmersiveSpace(id: model.immersiveSpaceID) {
 //            ImmersiveView()
 //                .environment(model)

@@ -20,21 +20,15 @@ import RealityKit
 /// The model content for the solar system module.
 struct SolarSystem: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.dismissWindow) private var dismissWindow
 
     var body: some View {
         ZStack {
-//            Earth(
-//                earthConfiguration: model.solarEarth,
-//                satelliteConfiguration: [model.solarSatellite],
-//                moonConfiguration: model.solarMoon
-//            )
-
             Sun(
                 scale: model.solarSunScale,
                 position: model.solarSunPosition
             )
-
-//            ForEach(model.solarPlanets.filter { $0.name != "Earth" }, id: \.name) { planet in
+            
             ForEach(model.solarPlanets, id: \.name) { planet in
                 Planet(
                     name: planet.name,
@@ -60,6 +54,12 @@ struct SolarSystem: View {
         .onDisappear {
             model.immersiveSpaceState = .closed
             model.isShowingSolar = false
+
+            // full immersive를 나가면 열려있던 행성 카드도 같이 닫는다.
+            for name in model.openPlanetCardNames {
+                dismissWindow(id: "PlanetDetail", value: name)
+            }
+            model.openPlanetCardNames.removeAll()
         }
     }
 }
