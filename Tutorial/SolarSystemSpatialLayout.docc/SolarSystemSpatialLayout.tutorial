@@ -1,0 +1,27 @@
+@Tutorials(name: "SwiftUI Spatial Layout으로 태양계 둘러보기") {
+    @Intro(title: "visionOS의 공간에 태양계를 펼쳐 보세요") {
+        SwiftUI의 레이아웃 도구와 RealityKit 콘텐츠를 조합해, 별이 빛나는 Full Immersive Space 안에 태양과 여덟 행성을 배치합니다.
+
+        @Image(source: starfield-texture.jpg, alt: "검은 우주 공간에 작고 밝은 별들이 흩어져 있는 밤하늘 텍스처")
+    }
+
+    @Chapter(name: "몰입형 우주 만들기") {
+        프로젝트를 준비하고, 일반 창에서 Full Immersive Space로 진입한 다음 사용자를 감싸는 별 배경을 만듭니다.
+
+        @Image(source: starfield-texture.jpg, alt: "몰입형 우주 배경에 사용하는 별 텍스처")
+
+        @TutorialReference(tutorial: "doc:01-ProjectSetup")
+        @TutorialReference(tutorial: "doc:02-EnterFullSpace")
+        @TutorialReference(tutorial: "doc:03-BuildStarfield")
+    }
+
+    @Chapter(name: "공간 레이아웃으로 태양계 구성하기") {
+        Reality Composer Pro의 행성 에셋을 깊이를 가진 SwiftUI 뷰로 표시하고, 원형 커스텀 레이아웃에 배치합니다.
+
+        @Image(source: jupiter-surface.jpg, alt: "목성 모델에 사용하는 갈색과 흰색 줄무늬 표면 텍스처")
+
+        @TutorialReference(tutorial: "doc:04-LoadPlanetAssets")
+        @TutorialReference(tutorial: "doc:05-BuildRadialLayout")
+        @TutorialReference(tutorial: "doc:06-ComposeSolarSystem")
+    }
+}

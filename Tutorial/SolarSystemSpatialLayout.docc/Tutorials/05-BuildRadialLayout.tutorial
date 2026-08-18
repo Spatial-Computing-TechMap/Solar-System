@@ -1,0 +1,45 @@
+@Tutorial(time: 30) {
+    @Intro(title: "커스텀 원형 레이아웃 만들기") {
+        기존 SwiftUI `Layout` 프로토콜과 삼각함수를 이용해 각 행성을 고유한 궤도 반지름과 각도에 배치합니다.
+
+        @Image(source: jupiter-surface.jpg, alt: "원형 태양계 레이아웃에 배치할 목성의 표면")
+    }
+
+    @Section(title: "자식 뷰에 궤도 정보 전달하기") {
+        @ContentAndMedia {
+            visionOS 26에는 별도의 `SpatialLayout` 프로토콜이 필요하지 않습니다. 기존 `Layout`과 스택이 깊이를 합성하고, `depthAlignment` 같은 공간 기능이 기존 시스템에 더해집니다.
+        }
+
+        @Steps {
+            @Step {
+                반지름과 각도를 담는 `SolarOrbitPlacement`와 기본값을 제공하는 `LayoutValueKey`를 만듭니다.
+            }
+
+            @Step {
+                행성 뷰가 `.solarOrbit(radius:angle:)` 형태로 값을 전달할 수 있도록 View 확장을 작성합니다.
+            }
+        }
+    }
+
+    @Section(title: "원의 좌표 계산하기") {
+        @ContentAndMedia {
+            중심이 `(centerX, centerY)`이고 반지름이 `r`, 각도가 `θ`일 때 위치는 `x = centerX + cos(θ) × r`, `y = centerY + sin(θ) × r`입니다.
+        }
+
+        @Steps {
+            @Step {
+                2,400×2,400 크기를 제안하는 `SolarSystemSpatialLayout`을 선언합니다.
+            }
+
+            @Step {
+                각 하위 뷰의 LayoutValue를 읽고 계산한 점에 중앙 앵커로 배치합니다.
+
+                @Code(name: "SolarSystemSpatialLayout.swift", file: Step05SolarSystemSpatialLayout.swift)
+            }
+
+            @Step {
+                현재 `orbitAngle`은 한 번만 읽는 정적 시작 위치입니다. 나중에 상태로 관리하는 각도를 전달하고 `withAnimation` 또는 시간 기반 업데이트를 추가하면, SwiftUI가 같은 레이아웃 안에서 위치 변화를 애니메이션할 수 있습니다. 현재 프로젝트에는 이 동작이 아직 없습니다.
+            }
+        }
+    }
+}

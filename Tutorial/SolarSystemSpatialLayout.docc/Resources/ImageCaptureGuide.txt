@@ -1,0 +1,26 @@
+DocC image capture guide
+
+The tutorial currently reuses source textures for valid @Image references. Replace or supplement them with real app captures using these filenames:
+
+placeholder-01-project-structure.png
+- Xcode Project navigator with Tutorial, Model, RealityViews, Solar System, and RealityKitContent visible.
+
+placeholder-02-full-space-entry.png
+- The Solar System window with the “입장하기” button, followed by the opened Full Immersive Space.
+
+placeholder-03-starfield.png
+- A visionOS Simulator or Apple Vision Pro capture showing only the inward-facing starfield.
+
+placeholder-04-planet-model.png
+- One loaded Reality Composer Pro planet with its spatialOverlay name badge.
+
+placeholder-05-radial-layout.png
+- A debug or final capture that makes the circular placement and different orbit radii visible.
+
+placeholder-06-complete-solar-system.png
+- The completed static solar system: Sun, eight planets, eight orbit lines, and the starfield.
+
+Capture rules:
+- Do not use third-party solar-system illustrations as final screenshots.
+- Keep text readable and avoid personal data in the visionOS environment.
+- Add accurate Korean alt text when replacing an @Image reference.

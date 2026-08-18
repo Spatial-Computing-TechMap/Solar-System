@@ -1,0 +1,43 @@
+@Tutorial(time: 20) {
+    @Intro(title: "사용자를 둘러싸는 별 배경 만들기") {
+        RealityKit이 적합한 부분에만 `RealityView`를 사용해 안쪽을 바라보는 거대한 밤하늘 구체를 만듭니다.
+
+        @Image(source: starfield-texture.jpg, alt: "Starfield RealityView의 구체 표면에 사용하는 별 텍스처")
+    }
+
+    @Section(title: "별 텍스처와 머티리얼 준비하기") {
+        @ContentAndMedia {
+            Starfield는 하나의 RealityKit 장면이므로 `RealityView`가 자연스럽습니다. 반면 다음 장의 개별 행성은 SwiftUI 레이아웃에 참여해야 하므로 `Model3D`를 사용합니다.
+        }
+
+        @Steps {
+            @Step {
+                Asset Catalog의 `Starfield` 텍스처를 `TextureResource`로 비동기 로드합니다.
+            }
+
+            @Step {
+                조명의 영향을 받지 않는 `UnlitMaterial`에 텍스처를 연결합니다. 우주 배경은 주변 조명과 관계없이 일정하게 보여야 합니다.
+            }
+        }
+    }
+
+    @Section(title: "안쪽을 향한 구체 만들기") {
+        @ContentAndMedia {
+            사용자는 구체 바깥이 아니라 안쪽에 있습니다. X축 스케일을 음수로 바꾸면 표면 방향이 반전되어 텍스처를 내부에서 볼 수 있습니다.
+        }
+
+        @Steps {
+            @Step {
+                반지름 1,000인 구체를 만들고 X축을 뒤집은 뒤 RealityView 콘텐츠에 추가합니다.
+
+                @Code(name: "Starfield.swift", file: Step03Starfield.swift)
+            }
+
+            @Step {
+                임시 검은색 화면 대신 `Starfield`를 Full Space의 루트에 배치합니다.
+
+                @Code(name: "SolarSystem.swift", file: Step03SolarSystem.swift)
+            }
+        }
+    }
+}

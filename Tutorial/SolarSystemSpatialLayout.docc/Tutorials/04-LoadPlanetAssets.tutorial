@@ -1,0 +1,47 @@
+@Tutorial(time: 30) {
+    @Intro(title: "실제 행성 에셋 표시하기") {
+        Reality Composer Pro의 Astronomy 에셋을 `Model3DAsset`으로 로드하고, 각 모델이 너비·높이뿐 아니라 깊이까지 차지하도록 만듭니다.
+
+        @Image(source: jupiter-surface.jpg, alt: "Reality Composer Pro 목성 모델의 줄무늬 표면")
+    }
+
+    @Section(title: "행성 데이터를 모델링하기") {
+        @ContentAndMedia {
+            화면 코드에 숫자를 흩어 놓지 않고 `PlanetConfiguration` 한 곳에서 이름, 에셋 이름, 표시 크기, 궤도 반지름과 초기 각도를 관리합니다. 현재 각도는 시작 위치를 위한 정적 값이며 시간에 따라 바뀌지 않습니다.
+        }
+
+        @Steps {
+            @Step {
+                태양과 여덟 행성의 설정을 작성합니다. 지구는 기존 `Earth.usda`와 이름 충돌을 피하기 위해 `EarthRCP`를 사용합니다.
+
+                @Code(name: "PlanetConfiguration.swift", file: Step04PlanetConfiguration.swift)
+            }
+        }
+    }
+
+    @Section(title: "Model3DAsset 로드하기") {
+        @ContentAndMedia {
+            `Model3DAsset`은 모델을 미리 비동기 로드하고, 로드된 결과와 애니메이션 상태를 여러 SwiftUI 업데이트 동안 유지하는 객체입니다. `Model3D(asset:)`은 이 결과를 실제 SwiftUI 뷰로 표시합니다.
+        }
+
+        @Steps {
+            @Step {
+                `RealityKitContent`의 번들을 지정해 에셋을 비동기 로드합니다. 로딩 중에는 ProgressView를, 실패하면 경고 아이콘을 표시합니다.
+            }
+
+            @Step {
+                해결된 모델에 `resizable()`과 `scaledToFit3D()`를 적용합니다. 첫 수정자는 부모의 크기 제안을 받을 수 있게 하고, 두 번째 수정자는 모델 비율을 보존하며 사용 가능한 3차원 공간에 맞춥니다.
+            }
+
+            @Step {
+                너비·높이 프레임에 별도의 `frame(depth:)`를 추가합니다. 일반 Text나 Image의 깊이는 0이지만, 이 Model3D는 설정된 깊이만큼 실제 레이아웃 공간을 차지합니다.
+
+                @Code(name: "PlanetModelView.swift", file: Step04PlanetModelView.swift)
+            }
+
+            @Step {
+                `spatialOverlay(alignment: .bottomFront)`로 이름표를 같은 3D 공간의 앞쪽에 겹칩니다. `SpatialContainer`가 여러 동등한 뷰를 한 공간에 합성한다면, `spatialOverlay`는 기준 뷰에 보조 뷰를 겹치는 데 적합합니다.
+            }
+        }
+    }
+}

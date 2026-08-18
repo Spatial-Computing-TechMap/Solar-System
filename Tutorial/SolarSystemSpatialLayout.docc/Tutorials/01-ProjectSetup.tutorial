@@ -1,0 +1,43 @@
+@Tutorial(time: 15) {
+    @Intro(title: "visionOS 프로젝트 준비하기") {
+        SwiftUI 앱 타깃과 RealityKitContent 패키지의 역할을 확인하고, 튜토리얼의 출발점이 되는 일반 창을 만듭니다.
+
+        @Image(source: starfield-texture.jpg, alt: "앞으로 만들 몰입형 태양계의 밤하늘 배경")
+    }
+
+    @Section(title: "프로젝트 구조 이해하기") {
+        @ContentAndMedia {
+            앱 코드는 `Tutorial/Tutorial`에, Reality Composer Pro 에셋은 `Tutorial/Packages/RealityKitContent`에 있습니다. 앱 타깃은 `RealityKitContent` 제품을 의존성으로 연결합니다. 자세한 책임 분리는 <doc:Architecture>에서 확인할 수 있습니다.
+        }
+
+        @Steps {
+            @Step {
+                Xcode 26.4 이상에서 `Tutorial.xcodeproj`를 열고 배포 대상이 visionOS 26.4인지 확인합니다. Apple Vision Pro Simulator와 실기기 모두 사용할 수 있으며 카메라 권한은 필요하지 않습니다.
+            }
+
+            @Step {
+                Reality Composer Pro에서 `RealityKitContent.rkassets`를 열고 Sun, Mercury, Venus, EarthRCP, Mars, Jupiter, Saturn, Uranus, Neptune 에셋이 있는지 확인합니다. 대용량 USDZ 파일은 DocC 카탈로그에 복제하지 않습니다.
+            }
+        }
+    }
+
+    @Section(title: "일반 SwiftUI 창 만들기") {
+        @ContentAndMedia {
+            앱은 아직 Immersive Space를 열지 않습니다. `WindowGroup`이 `ContentView`를 표시하는 최소 상태부터 시작합니다.
+        }
+
+        @Steps {
+            @Step {
+                `TutorialApp`에 일반 창을 선언합니다.
+
+                @Code(name: "TutorialApp.swift", file: Step01TutorialApp.swift)
+            }
+
+            @Step {
+                사용자가 다음 단계에서 몰입형 공간을 열 수 있도록 제목과 버튼 모양을 배치합니다. 이 단계의 버튼에는 아직 동작이 없습니다.
+
+                @Code(name: "ContentView.swift", file: Step01ContentView.swift)
+            }
+        }
+    }
+}

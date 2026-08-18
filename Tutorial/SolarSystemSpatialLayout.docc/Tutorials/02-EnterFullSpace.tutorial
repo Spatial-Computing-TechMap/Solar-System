@@ -1,0 +1,40 @@
+@Tutorial(time: 15) {
+    @Intro(title: "Full Immersive Space로 진입하기") {
+        앱의 일반 창에서 `openImmersiveSpace`를 호출해 태양계를 표시할 Full Space를 엽니다.
+
+        @Image(source: starfield-texture.jpg, alt: "Full Immersive Space가 열리면 사용자를 둘러쌀 별 배경")
+    }
+
+    @Section(title: "몰입형 Scene 선언하기") {
+        @ContentAndMedia {
+            `ImmersiveSpace`는 WindowGroup과 별개의 Scene입니다. 현재 앱은 `.mixed` 공간을 먼저 열지 않고, 일반 창에서 `.full` 공간으로 바로 이동합니다.
+        }
+
+        @Steps {
+            @Step {
+                `TutorialApp`에 `SolarSystemSpace`를 추가하고 스타일을 `.full`로 제한합니다. `SolarSystem`은 다음 단계에서 내용을 채울 임시 검은색 뷰입니다.
+
+                @Code(name: "TutorialApp.swift", file: Step02TutorialApp.swift)
+                @Code(name: "SolarSystem.swift", file: Step02SolarSystem.swift)
+            }
+        }
+    }
+
+    @Section(title: "버튼에서 공간 열기") {
+        @ContentAndMedia {
+            `openImmersiveSpace`는 비동기 환경 액션입니다. 중복 요청을 방지하기 위해 작업 중에는 버튼을 비활성화합니다.
+        }
+
+        @Steps {
+            @Step {
+                환경에서 `openImmersiveSpace`를 가져오고 버튼 안에서 `SolarSystemSpace`를 엽니다. `defer`는 성공 여부와 관계없이 로딩 상태를 되돌립니다.
+
+                @Code(name: "ContentView.swift", file: Step02ContentView.swift)
+            }
+
+            @Step {
+                앱을 실행해 “입장하기”를 선택합니다. 현재 흐름은 `Window → Full Space`이며 `Mixed → Full Space` 전환은 <doc:Roadmap>의 후속 범위입니다.
+            }
+        }
+    }
+}
