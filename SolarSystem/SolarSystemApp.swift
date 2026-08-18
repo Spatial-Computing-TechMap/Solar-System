@@ -23,7 +23,7 @@ struct SolarSystemApp: App {
                 .environment(model)
         }
         .windowStyle(.plain)
-        
+
         ImmersiveSpace(id: model.immersiveSpaceID) {
 //            ImmersiveView()
 //                .environment(model)

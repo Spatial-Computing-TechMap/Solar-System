@@ -23,30 +23,37 @@ struct SolarSystem: View {
 
     var body: some View {
         ZStack {
-//            Earth(
-//                earthConfiguration: model.solarEarth,
-//                satelliteConfiguration: [model.solarSatellite],
-//                moonConfiguration: model.solarMoon
-//            )
-
             Sun(
                 scale: model.solarSunScale,
                 position: model.solarSunPosition
             )
 
-//            ForEach(model.solarPlanets.filter { $0.name != "Earth" }, id: \.name) { planet in
-            ForEach(model.solarPlanets, id: \.name) { planet in
-                Planet(
-                    name: planet.name,
-                    scale: planet.scale(
-                        worldRadiusPerKm: model.worldRadiusPerKm,
-                        minWorldRadius: model.minPlanetScale,
-                        maxWorldRadius: model.maxPlanetScale
-                    ),
-                    position: planet.position(around: model.solarSunPosition, spacingPerOrder: model.spacingPerOrder)
-                )
+            /* 1. 각 행성을 RealityView attachment로 배치
+         2. 위치는 기존과 동일한 미터 단위 RealityKit 좌표(PlanetConfiguration.position)를 그대로 쓰고,attachment 안의 SwiftUI 콘텐츠(PlanetCardContent)가 Model3D + depthAlignment로 구성
+        */
+            
+            RealityView { content, attachments in
+                for planet in model.solarPlanets {
+                    guard let attachmentEntity = attachments.entity(for: planet.name) else { continue }
+                    attachmentEntity.position = planet.position(
+                        around: model.solarSunPosition,
+                        spacingPerOrder: model.spacingPerOrder)
+                    content.add(attachmentEntity)
+                }
+            } attachments: {
+                ForEach(model.solarPlanets, id: \.name) { planet in
+                    Attachment(id: planet.name) {
+                        PlanetCardContent(
+                            name: planet.name,
+                            scale: planet.scale(
+                                worldRadiusPerKm: model.worldRadiusPerKm,
+                                minWorldRadius: model.minPlanetScale,
+                                maxWorldRadius: model.maxPlanetScale
+                            )
+                        )
+                    }
+                }
             }
-
             Starfield()
         }
         .onAppear {
