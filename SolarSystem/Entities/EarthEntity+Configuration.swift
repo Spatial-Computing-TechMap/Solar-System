@@ -49,11 +49,17 @@ extension EarthEntity {
             date: Date(),
             axActions: AccessibilityActions.zoom)
 
+        // `scale` is tuned against the Earth model's known collider radius
+        // (0.25 unit, doubled to 0.5 by the asset's own xform) so the
+        // rendered planet comes out to roughly a 0.35-unit radius -- sized
+        // to sit comfortably in `PlanetEntity`'s new orbit spacing rather
+        // than the old single-planet, camera-facing layout. `position` is
+        // `.zero` because `PlanetEntity` now positions Earth along its orbit.
         static var solarEarthDefault: Configuration = .init(
             isCloudy: true,
-            scale: 4.6,
+            scale: 0.7,
             speed: 0.045,
-            position: [-2, 0.4, -5],
+            position: .zero,
             date: Date())
     }
 

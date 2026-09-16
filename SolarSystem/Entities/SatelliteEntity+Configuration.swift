@@ -59,7 +59,13 @@ extension SatelliteEntity {
                 displayName: String(localized: "Moon", comment: "The Moon in orbit around Earth."),
                 speedRatio: 1 / 28,
                 scale: 0.25,
-                altitude: 3.75,
+                // Was tuned (3.75) for Earth's old standalone scale of 4.6;
+                // now that Earth is a small planet in a compact system
+                // (scale 0.7, see EarthEntity+Configuration.swift), that
+                // altitude put the Moon's orbit almost as wide as a real
+                // planet's, making it look like a ninth planet rather than
+                // Earth's satellite.
+                altitude: 0.6,
                 initialRotation: .degrees(90))
         }
         static var disabledMoon: Configuration {

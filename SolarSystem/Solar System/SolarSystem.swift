@@ -21,20 +21,25 @@ import RealityKit
 struct SolarSystem: View {
     @Environment(AppModel.self) private var model
 
+    /// The shared anchor that a focused planet and its info panel animate
+    /// into. Created once by `FocusStage` and handed to every `Planet`.
+    @State private var focusStage: Entity?
+
     var body: some View {
         ZStack {
-            Earth(
-                earthConfiguration: model.solarEarth,
-                satelliteConfiguration: [model.solarSatellite],
-                moonConfiguration: model.solarMoon
-            )
+            Starfield()
 
             Sun(
-                scale: 50,
-                position: model.solarSunPosition
+                scale: model.solarSunScale,
+                position: model.solarSunPosition,
+                isHidden: model.focusedPlanetID != nil
             )
-            
-            Starfield()
+
+            FocusStage(stageEntity: $focusStage)
+
+            ForEach(model.solarPlanets, id: \.id) { configuration in
+                Planet(configuration: configuration, focusStage: focusStage)
+            }
         }
         .onAppear {
             model.immersiveSpaceState = .open
