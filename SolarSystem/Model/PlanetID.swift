@@ -32,14 +32,14 @@ enum PlanetID: Int, CaseIterable, Identifiable, Hashable {
     /// Earth, which always uses the dedicated `EarthEntity`.
     var assetName: String {
         switch self {
-        case .mercury: "Mercury"
-        case .venus: "Venus"
+        case .mercury: "Planets/Mercury"
+        case .venus: "Planets/Venus"
         case .earth: "Earth"
-        case .mars: "Mars"
-        case .jupiter: "Jupiter"
-        case .saturn: "Saturn"
-        case .uranus: "Uranus"
-        case .neptune: "Neptune"
+        case .mars: "Planets/Mars"
+        case .jupiter: "Planets/Jupiter"
+        case .saturn: "Planets/Saturn"
+        case .uranus: "Planets/Uranus"
+        case .neptune: "Planets/Neptune"
         }
     }
 

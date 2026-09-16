@@ -170,12 +170,17 @@ class PlanetEntity: Entity {
     /// The size every planet is scaled to when focused, regardless of its
     /// natural size -- so tiny Mercury and huge Jupiter both read clearly
     /// at a glance instead of the focused planet's size varying wildly.
-    static let focusDisplayRadius: Float = 0.45
-    /// Where the info panel offsets from a focused planet's center. Chosen
-    /// so the enlarged planet and `PlanetInfoPanel` (760 points wide, see
-    /// that file) sit side by side as roughly equal halves of the view,
-    /// instead of a small card tucked beside the planet.
-    static let focusPanelOffset: Float = focusDisplayRadius + 0.38
+    static let focusDisplayRadius: Float = 0.35
+    /// How much the info panel is enlarged while focused, so its text reads
+    /// comfortably next to the enlarged planet.
+    static let focusPanelScale: Float = 1.4
+    /// Half the focused panel's width in meters: `PlanetInfoPanel` is 760
+    /// points wide (about 0.56 m), times `focusPanelScale`.
+    static let focusPanelHalfWidth: Float = 0.28 * focusPanelScale
+    /// Where the info panel's center offsets from a focused planet's center,
+    /// leaving a small gap so the two sit side by side as roughly equal
+    /// halves of the view.
+    static let focusPanelOffset: Float = focusDisplayRadius + 0.1 + focusPanelHalfWidth
 
     /// How much bigger (or smaller) this planet gets scaled to reach
     /// `focusDisplayRadius` once focused.
@@ -224,10 +229,29 @@ class PlanetEntity: Entity {
     /// missing asset is the expected, common case for most planets today.
     private static func loadPlaceholderModel(assetName: String, radius: Float, color: Color) async -> Entity {
         if let asset = try? await Entity(named: assetName, in: worldAssetsBundle) {
-            return asset
+            return normalizedToUnitRadius(asset)
         }
         let material = SimpleMaterial(color: UIColor(color), isMetallic: false)
         return ModelEntity(mesh: .generateSphere(radius: radius), materials: [material])
+    }
+
+    /// Wraps a loaded asset so it's centered with a radius of 1, whatever
+    /// size it was authored at -- `update(...)` then scales it by
+    /// `visualRadius`, so the planet ends up exactly that big.
+    ///
+    /// Measures the pole-to-pole (Y) extent rather than the widest one, so
+    /// Saturn's flat rings don't count toward its radius and shrink the body.
+    private static func normalizedToUnitRadius(_ asset: Entity) -> Entity {
+        let bounds = asset.visualBounds(relativeTo: nil)
+        let radius = bounds.extents.y / 2
+        guard radius > 0 else { return asset }
+
+        asset.scale = SIMD3(repeating: 1 / radius)
+        asset.position = -bounds.center / radius
+
+        let container = Entity()
+        container.addChild(asset)
+        return container
     }
 
     private static func tiltOrientation(_ tilt: Angle) -> simd_quatf {

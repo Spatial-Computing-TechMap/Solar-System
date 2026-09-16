@@ -43,6 +43,7 @@ struct Planet: View {
                     focusStage.addChild(panel)
                 }
                 panel.position = [PlanetEntity.focusPanelOffset, 0, 0]
+                panel.scale = SIMD3(repeating: PlanetEntity.focusPanelScale)
             }
 
         } attachments: {
@@ -61,6 +62,12 @@ struct Planet: View {
                 .targetedToAnyEntity()
                 .onEnded { value in
                     guard value.entity.components[PlanetSelectionComponent.self] != nil else { return }
+                    // Only move the stage when focus first opens, so
+                    // Previous/Next keep planets in the same spot. Move it
+                    // before focusing, so the planet flies straight there.
+                    if model.focusedPlanetID == nil, let focusStage {
+                        model.placeFocusStageInFrontOfViewer(focusStage)
+                    }
                     model.focusedPlanetID = configuration.id
                 }
         )

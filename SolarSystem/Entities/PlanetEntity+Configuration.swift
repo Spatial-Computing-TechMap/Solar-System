@@ -76,11 +76,22 @@ extension PlanetEntity.Configuration {
     private static let earthRotationSpeed: Float = 0.045
     private static let earthRevolutionSpeed: Float = 0.05
 
+    // Orbit radii are spaced so neighboring planets can never touch, even
+    // when they pass each other: each orbit sits at least
+    // (inner planet's outer edge + 0.15 + this planet's outer edge) beyond
+    // the previous one. Outer edges used, in meters:
+    //   Sun 0.76 (AppModel.solarSunScale 2.0 x 0.378 asset radius)
+    //   Mercury 0.15, Venus 0.22, Mars 0.17, Jupiter 0.42, Uranus 0.27,
+    //   Neptune 0.26 -- each planet's `visualRadius`
+    //   Earth 0.5 -- its Moon's orbit, not the globe itself
+    //   Saturn 0.89 -- its rings span about 2.34x its `visualRadius`
+    // Change a planet's size or the Sun's scale, and re-check these.
+
     static var mercury: Self {
         .init(
             id: .mercury,
             modelKind: .placeholder(color: Color(red: 0.61, green: 0.61, blue: 0.58)),
-            orbitRadius: 0.8,
+            orbitRadius: 1.2,
             initialOrbitAngle: .degrees(20),
             visualRadius: 0.15,
             ringRadius: 0.19,
@@ -93,7 +104,7 @@ extension PlanetEntity.Configuration {
         .init(
             id: .venus,
             modelKind: .placeholder(color: Color(red: 0.91, green: 0.80, blue: 0.64)),
-            orbitRadius: 1.25,
+            orbitRadius: 1.75,
             initialOrbitAngle: .degrees(95),
             visualRadius: 0.22,
             ringRadius: 0.27,
@@ -113,7 +124,7 @@ extension PlanetEntity.Configuration {
         .init(
             id: .earth,
             modelKind: .earth(configuration: configuration, satellites: satellites, moon: moon),
-            orbitRadius: 1.9,
+            orbitRadius: 2.65,
             initialOrbitAngle: .degrees(160),
             ringRadius: 0.44,
             axialTilt: .zero,
@@ -126,7 +137,7 @@ extension PlanetEntity.Configuration {
         .init(
             id: .mars,
             modelKind: .placeholder(color: Color(red: 0.76, green: 0.35, blue: 0.24)),
-            orbitRadius: 2.55,
+            orbitRadius: 3.5,
             initialOrbitAngle: .degrees(210),
             visualRadius: 0.17,
             ringRadius: 0.21,
@@ -139,7 +150,7 @@ extension PlanetEntity.Configuration {
         .init(
             id: .jupiter,
             modelKind: .placeholder(color: Color(red: 0.79, green: 0.64, blue: 0.42)),
-            orbitRadius: 3.25,
+            orbitRadius: 4.25,
             initialOrbitAngle: .degrees(30),
             visualRadius: 0.42,
             ringRadius: 0.52,
@@ -152,7 +163,7 @@ extension PlanetEntity.Configuration {
         .init(
             id: .saturn,
             modelKind: .placeholder(color: Color(red: 0.86, green: 0.78, blue: 0.57)),
-            orbitRadius: 4.15,
+            orbitRadius: 5.75,
             initialOrbitAngle: .degrees(275),
             visualRadius: 0.38,
             ringRadius: 0.47,
@@ -165,7 +176,7 @@ extension PlanetEntity.Configuration {
         .init(
             id: .uranus,
             modelKind: .placeholder(color: Color(red: 0.62, green: 0.84, blue: 0.87)),
-            orbitRadius: 4.95,
+            orbitRadius: 7.1,
             initialOrbitAngle: .degrees(120),
             visualRadius: 0.27,
             ringRadius: 0.34,
@@ -178,7 +189,7 @@ extension PlanetEntity.Configuration {
         .init(
             id: .neptune,
             modelKind: .placeholder(color: Color(red: 0.24, green: 0.37, blue: 0.80)),
-            orbitRadius: 5.65,
+            orbitRadius: 7.8,
             initialOrbitAngle: .degrees(340),
             visualRadius: 0.26,
             ringRadius: 0.33,

@@ -35,7 +35,7 @@ struct SolarSystem: View {
                 isHidden: model.focusedPlanetID != nil
             )
 
-            FocusStage(stageEntity: $focusStage)
+            FocusStage(stageEntity: $focusStage, isActive: model.focusedPlanetID != nil)
 
             ForEach(model.solarPlanets, id: \.id) { configuration in
                 Planet(configuration: configuration, focusStage: focusStage)
@@ -49,7 +49,11 @@ struct SolarSystem: View {
             announcement.accessibilitySpeechAnnouncementPriority = .high
             AccessibilityNotification.Announcement(announcement).post()
         }
+        .task {
+            await model.headTracker.start()
+        }
         .onDisappear {
+            model.headTracker.stop()
             model.immersiveSpaceState = .closed
             model.isShowingSolar = false
         }
