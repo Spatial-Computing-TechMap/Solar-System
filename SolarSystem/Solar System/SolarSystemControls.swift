@@ -11,48 +11,19 @@ import SwiftUI
 struct SolarSystemControls: View {
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var factCount = 0
 
     var body: some View {
         VStack {
             Spacer()
 
             VStack {
-                HStack {
-                    Button {
-                        withAnimation { factCount -= 1 }
-                    } label: {
-                        Label("Previous", systemImage: "chevron.left")
-                    }
-                    .disabled(factCount == 0)
-                    .padding()
+                Text("The Solar System")
+                    .font(.title)
+                    .padding(.vertical, 10)
 
-                    Spacer()
-
-                    Text("The Solar System")
-                        .font(.title)
-
-                    Spacer()
-
-                    Button {
-                        withAnimation { factCount += 1 }
-                    } label: {
-                        Label("Next", systemImage: "chevron.right")
-                    }
-                    .disabled(factCount == Module.funFacts.count - 1)
-                    .padding()
-                }
-                .labelStyle(.iconOnly)
-
-                ZStack {
-                    ForEach(Module.funFacts, id: \.self) { fact in
-                        Text(fact)
-                            .foregroundStyle(.secondary)
-                            .padding(.horizontal)
-                            .opacity(fact == Module.funFacts[factCount] ? 1 : 0)
-                    }
-                }
-                .animation(.default, value: factCount)
+                Text(Module.funFacts[0])
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal)
 
                 Divider()
                     .padding()
@@ -82,6 +53,7 @@ struct SolarSystemControls: View {
                     }
                 }
             }
+            .padding(.vertical, 24)
             .frame(width: 500)
             .glassBackgroundEffect(in: .rect(cornerRadius: 40))
             .onAppear {

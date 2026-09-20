@@ -10,7 +10,7 @@ import SwiftUI
 /// The module detail content that's specific to the solar system module.
 struct SolarSystemModule: View {
     var body: some View {
-        Image("SolarHero")
+        Image("SolarSystem")
             .resizable()
             .scaledToFit()
     }
