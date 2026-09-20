@@ -1,0 +1,54 @@
+@Tutorials(name: "SolarSystem") {
+    @Intro(title: "visionOS로 태양계 만들기") {
+        Apple Vision Pro에서 눈앞에 태양계를 펼치는 앱을 처음부터 만들어 봅니다.
+
+                여덟 개의 행성이 각자의 궤도를 돌고, 행성을 손가락으로 집으면 그 행성이 시선 정면으로 다가와 설명과 함께 나타납니다.
+
+                visionOS 개발이 처음이어도 괜찮습니다. SwiftUI 기본 문법만 알고 있다면 따라올 수 있도록 RealityKit, 엔티티, 공간 제스처 같은 개념을 하나씩 설명하면서 진행합니다.
+        @Image(source: "app-solarsystem.png", alt: "visionOS로 태양계 만들기")
+    }
+
+    @Chapter(name: "프로젝트와 에셋 준비하기") {
+        빈 visionOS 앱을 만들고, 별 배경과 태양, 지구를 포함한 여덟 행성의 모델을 준비합니다. 이후 챕터의 코드를 작성하기 전에 반드시 완료하세요.
+        @Image(source: "diagram-assets-folder.svg", alt: "프로젝트와 에셋 준비하기")
+        @TutorialReference(tutorial: "doc:01-ProjectAndAssets")
+    }
+
+    @Chapter(name: "창과 몰입 공간 만들기") {
+        창에서 몰입 공간을 여닫고, 별이 가득한 우주 배경을 띄웁니다.
+        @Image(source: "app-starfield.png", alt: "창과 몰입 공간 만들기")
+        @TutorialReference(tutorial: "doc:02-WindowAndSpace")
+    }
+
+    @Chapter(name: "태양과 조명") {
+        태양 모델을 불러와 배치하고, 장면 전체를 비추는 빛을 직접 만듭니다.
+        @Image(source: "app-sun.png", alt: "태양과 조명")
+        @TutorialReference(tutorial: "doc:03-SunAndLighting")
+    }
+
+    @Chapter(name: "행성과 궤도") {
+        여덟 개의 행성이 각자의 궤도를 돌고 제자리에서 자전하도록 만듭니다.
+        @Image(source: "app-solarsystem.png", alt: "행성과 궤도")
+        @TutorialReference(tutorial: "doc:04-PlanetsInOrbit")
+    }
+
+    @Chapter(name: "핀치해서 행성 선택하기") {
+        행성을 바라보고 손가락을 맞대면 그 행성이 앞으로 다가오도록 만듭니다.
+        @Image(source: "app-focus-mars.png", alt: "핀치해서 행성 선택하기")
+        @TutorialReference(tutorial: "doc:05-TapToFocus")
+    }
+
+    @Chapter(name: "설명 패널과 시선 앞 배치") {
+        행성 옆에 설명 패널을 띄우고, 지금 바라보는 방향 정면에 나타나게 만듭니다.
+        @Image(source: "app-focus-mars.png", alt: "설명 패널과 시선 앞 배치")
+        @TutorialReference(tutorial: "doc:06-InfoPanelAndHeadPlacement")
+    }
+
+    @Chapter(name: "Spatial Layout으로 창 다시 만들기") {
+        visionOS 26의 새로운 SwiftUI spatial layout API(SpatialContainer, depthAlignment)로
+        기존 창 UI를 다시 구성합니다. 겉모습과 동작은 그대로 유지하면서, 내부 구현만
+        새 도구로 바꿔봅니다.
+        @Image(source: "app-solarsystem.png", alt: "Spatial Layout으로 창 다시 만들기")
+        @TutorialReference(tutorial: "doc:07-SpatialLayout")
+    }
+}

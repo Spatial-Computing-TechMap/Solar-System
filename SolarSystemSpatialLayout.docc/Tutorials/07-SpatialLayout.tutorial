@@ -1,0 +1,127 @@
+@Tutorial(time: 15) {
+    @Intro(title: "Spatial Layout으로 창 다시 만들기") {
+        WWDC25 "Meet SwiftUI spatial layout" 세션에서 소개한 `SpatialContainer`와
+        `depthAlignment`로, 1~6챕터에서 만든 창 UI(`SwitchWindows`, `SolarCard`)의
+        내부 구현만 바꿔봅니다. 겉모습과 동작은 지금과 완전히 동일하게 유지됩니다 —
+        같은 결과를 얻는 더 명시적인 3D 레이아웃 도구로 바꿔보는 챕터입니다.
+
+        @Image(source: "app-solarsystem.png", alt: "Spatial Layout으로 창 다시 만들기")
+    }
+
+    @Section(title: "창 UI 코드 받기") {
+        @ContentAndMedia {
+            `SwitchWindows`, `SolarCard` 같은 창 UI 파일은 새로운 개념을 가르치는
+            코드가 아니라 화면에 보여줄 문구/버튼을 담은 "단순 정보" 코드라,
+            한 줄씩 따라 치는 대신 파일로 통째로 제공합니다. 1~6챕터를 마친
+            프로젝트에 아래 파일을 추가하면 이 챕터를 시작할 준비가 끝납니다.
+        }
+
+        @Steps {
+            @Step {
+                [SolarSystem-WindowUI.zip](SolarSystem-WindowUI.zip)을 내려받아
+                압축을 풉니다. `Module.swift`, `SwitchWindows.swift`,
+                `SolarCard.swift`, `SolarSystemControls.swift`,
+                `ToggleImmersiveSpaceButton.swift`, `SolarSystemModule.swift`와
+                이미지 에셋 2개(`SolarSystem`, `SolarBackground`)가 들어 있습니다.
+            }
+
+            @Step {
+                `Module.swift`는 프로젝트의 `Model` 폴더에, 나머지 5개 `.swift`
+                파일은 `Solar System` 폴더에 추가합니다. 두 이미지 에셋은
+                프로젝트의 `Assets.xcassets`에 끌어다 놓습니다.
+            }
+
+            @Step {
+                `SolarSystemApp.swift`의 `WindowGroup` 내용을 `ContentView()`
+                대신 `SwitchWindows()`로 바꿉니다. 이제 6챕터까지 만든 몰입
+                공간은 그대로 두고, 창만 `SwitchWindows`/`SolarCard` 기반으로
+                바뀝니다.
+            }
+        }
+    }
+
+    @Section(title: "SolarSystemControls와 SolarCard를 SpatialContainer로 겹치기") {
+        @ContentAndMedia {
+            `SwitchWindows`는 `SolarSystemControls`(full immersive용)와
+            `SolarCard`(mixed immersive용)를 완전히 같은 자리에서 opacity로만
+            크로스페이드합니다. 두 뷰가 **같은 3D 공간을 공유**하는 상황이라,
+            `SpatialContainer`가 정확히 의도하는 사용 사례입니다.
+        }
+
+        @Steps {
+            @Step {
+                지금까지 만든 `SwitchWindows`는 `ZStack`으로 두 뷰를 겹쳐서
+                `model.isShowingSolar`에 따라 opacity를 반대로 애니메이션합니다.
+
+                @Code(name: "SwitchWindows.swift", file: "07-01-SwitchWindows.swift")
+            }
+
+            @Step {
+                `ZStack`을 `SpatialContainer(alignment: .center)`로 바꿉니다.
+                `ZStack`의 기본 정렬이 `.center`이므로, `alignment: .center`를
+                그대로 넘기면 두 뷰가 이전과 똑같은 위치에서 겹칩니다 — 오직
+                컨테이너 타입만 3D 공간을 다루는 것으로 바뀔 뿐, opacity
+                크로스페이드 로직은 한 줄도 바뀌지 않습니다.
+
+                @Code(name: "SwitchWindows.swift", file: "07-02-SwitchWindows.swift")
+            }
+        }
+    }
+
+    @Section(title: "SolarCard의 레이아웃에 depthAlignment 적용하기") {
+        @ContentAndMedia {
+            `SolarCard`는 소개 텍스트와 `module.detailView`(평면 이미지)를
+            `HStack`으로 나란히 배치합니다. `depthAlignment`는 여러 뷰를 깊이(Z)축
+            기준으로 정렬하는 도구인데, 지금 두 자식 모두 깊이가 없는 평면
+            콘텐츠라 이 자리에 적용해도 정렬할 깊이 차이 자체가 없어 겉모습이
+            바뀌지 않습니다.
+        }
+
+        @Steps {
+            @Step {
+                기존 코드는 평범한 `HStack`으로 텍스트와 `module.detailView`를
+                나란히 배치합니다.
+
+                @Code(name: "SolarCard.swift", file: "07-03-SolarCard.swift")
+            }
+
+            @Step {
+                `depthAlignment`는 `HStack`이 아니라 `Layout` 값(`HStackLayout`)에만
+                걸 수 있습니다. `HStack(spacing: 60) { ... }`을
+                `HStackLayout(spacing: 60).depthAlignment(.center) { ... }`로
+                바꿉니다. 두 자식 다 깊이 0인 평면 콘텐츠라 `.center` 정렬은
+                실제로는 아무것도 움직이지 않는 항등(identity) 연산입니다.
+
+                @Code(name: "SolarCard.swift", file: "07-04-SolarCard.swift")
+            }
+        }
+    }
+
+    @Section(title: "적용하지 않은 것: rotation3DLayout, spatialOverlay") {
+        @ContentAndMedia {
+            "Meet SwiftUI spatial layout"에는 `rotation3DLayout`과
+            `spatialOverlay`도 있지만, 이번 챕터에서는 일부러 제외했습니다.
+            이유를 알아두면 "겉모습을 유지해야 하는 리팩터링"과 "새 기능을
+            추가하는 작업"을 구분하는 데 도움이 됩니다.
+        }
+
+        @Steps {
+            @Step {
+                `rotation3DLayout(angle:axis:)`은 뷰를 실제로 회전시키는
+                모디파이어라, 각도가 0이 아니면 반드시 겉모습이 바뀝니다.
+                지금 창 UI에는 회전이 필요한 요소가 없어서, 의미 있게 적용할
+                자리가 없었습니다. (`PlanetInfoPanel`에 행성 3D 프리뷰를 회전시켜
+                보여주는 실험은 별도 브랜치에서 진행했습니다 — 그건 새 콘텐츠를
+                "추가"하는 작업이라 이 챕터의 "동작 유지" 조건과는 성격이
+                다릅니다.)
+            }
+
+            @Step {
+                `spatialOverlay(alignment:)`도 마찬가지로 뷰 위에 깊이감 있는
+                콘텐츠를 새로 얹는 도구라, 지금 있는 뷰만으로는 적용할 대상이
+                없습니다. 나중에 카드 위에 3D 미리보기 같은 새 콘텐츠를 얹고
+                싶어지면, 그때 `spatialOverlay`를 다시 고려하면 됩니다.
+            }
+        }
+    }
+}
