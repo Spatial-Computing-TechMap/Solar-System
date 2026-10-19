@@ -33,6 +33,10 @@ struct PlanetFocusLayout: View {
     private static let panelScale: CGFloat = 1.4
     private static let panelSize = CGSize(width: 760, height: 520)
 
+    /// Matches the duration `setFocused(...)` animated a planet into the
+    /// focus stage over.
+    private static let arrivalDuration: TimeInterval = 0.6
+
     var body: some View {
         HStackLayout(spacing: spacing).depthAlignment(.center) {
             // A `RealityView` builds its content once, and
@@ -44,13 +48,32 @@ struct PlanetFocusLayout: View {
             ZStack {
                 RealityView { content in
                     let planet = await PlanetEntity(configuration: Self.focusConfiguration(configuration))
-                    planet.scale = SIMD3(repeating: PlanetEntity.focusScale(for: configuration))
+                    let focusScale = PlanetEntity.focusScale(for: configuration)
+                    planet.scale = SIMD3(repeating: focusScale)
                     content.add(planet)
                     content.add(Self.makeKeyLight())
+
+                    // `setFocused(...)` used to scale a planet from its
+                    // orbit size to `focusScale` over this same 0.6s, and
+                    // that RealityKit animation is what made arriving read
+                    // as settling into place rather than cutting. It can't
+                    // run inside this closure, though: `.fixedSize`
+                    // measures the moment the closure returns, so the
+                    // planet has to already be its final size by then. The
+                    // animation starts on the next turn of the run loop,
+                    // once the measurement is in, and the fade covers the
+                    // frame in between.
+                    Task { @MainActor in
+                        planet.scale = SIMD3(repeating: 1)
+                        planet.move(
+                            to: Transform(scale: SIMD3(repeating: focusScale)),
+                            relativeTo: planet.parent,
+                            duration: Self.arrivalDuration)
+                    }
                 }
                 .realityViewLayoutBehavior(.fixedSize)
                 .id(configuration.id)
-                .transition(.scale(scale: 0.75).combined(with: .opacity))
+                .transition(.opacity)
             }
             // The tilt lives here rather than on the entity so the layout
             // sees it: SwiftUI reserves a box that contains the rotated
