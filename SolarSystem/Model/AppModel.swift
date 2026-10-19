@@ -104,16 +104,26 @@ class AppModel {
             position: headPosition + forward * focusDistance)
     }
 
+    /// How long a planet takes to arrive in, or leave, the focus layout --
+    /// the duration the planet used to spend flying there.
+    static let focusTransition: Animation = .easeInOut(duration: 0.6)
+
     func focusNext() {
-        focusedPlanetID = (focusedPlanetID ?? .neptune).next
+        withAnimation(Self.focusTransition) {
+            focusedPlanetID = (focusedPlanetID ?? .neptune).next
+        }
     }
 
     func focusPrevious() {
-        focusedPlanetID = (focusedPlanetID ?? .mercury).previous
+        withAnimation(Self.focusTransition) {
+            focusedPlanetID = (focusedPlanetID ?? .mercury).previous
+        }
     }
 
     func closeFocus() {
-        focusedPlanetID = nil
+        withAnimation(Self.focusTransition) {
+            focusedPlanetID = nil
+        }
     }
 
     // A fixed spot and size for the Sun -- also the point every planet's

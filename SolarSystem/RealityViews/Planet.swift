@@ -39,7 +39,9 @@ struct Planet: View {
                     if model.focusedPlanetID == nil {
                         model.updateFocusPlacement()
                     }
-                    model.focusedPlanetID = configuration.id
+                    withAnimation(AppModel.focusTransition) {
+                        model.focusedPlanetID = configuration.id
+                    }
                 }
         )
     }

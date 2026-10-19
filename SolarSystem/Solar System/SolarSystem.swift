@@ -44,6 +44,7 @@ struct SolarSystem: View {
             // placing its center is all this has to do.
             if let focused = model.focusedConfiguration {
                 PlanetFocusLayout(configuration: focused)
+                    .transition(.opacity)
                     .rotation3DEffect(.radians(Double(model.focusPlacement.yaw)),
                                       axis: (x: 0, y: 1, z: 0))
                     .offset(x: CGFloat(model.focusPlacement.position.x) * pointsPerMeter,

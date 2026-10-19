@@ -35,23 +35,41 @@ struct PlanetFocusLayout: View {
 
     var body: some View {
         HStackLayout(spacing: spacing).depthAlignment(.center) {
-            RealityView { content in
-                let planet = await PlanetEntity(configuration: Self.focusConfiguration(configuration))
-                planet.scale = SIMD3(repeating: PlanetEntity.focusScale(for: configuration))
-                content.add(planet)
-                content.add(Self.makeKeyLight())
+            // A `RealityView` builds its content once, and
+            // `.fixedSize` only measures at the end of that build -- so
+            // moving to another planet has to replace the view outright,
+            // which `id(_:)` does. The `ZStack` keeps the outgoing and
+            // incoming planets on top of each other while they cross-fade,
+            // instead of letting the `HStack` sit them side by side.
+            ZStack {
+                RealityView { content in
+                    let planet = await PlanetEntity(configuration: Self.focusConfiguration(configuration))
+                    planet.scale = SIMD3(repeating: PlanetEntity.focusScale(for: configuration))
+                    content.add(planet)
+                    content.add(Self.makeKeyLight())
+                }
+                .realityViewLayoutBehavior(.fixedSize)
+                .id(configuration.id)
+                .transition(.scale(scale: 0.75).combined(with: .opacity))
             }
-            .realityViewLayoutBehavior(.fixedSize)
             // The tilt lives here rather than on the entity so the layout
             // sees it: SwiftUI reserves a box that contains the rotated
             // planet, which a tilt applied inside RealityKit would hide.
             .rotation3DLayout(configuration.axialTilt, axis: (x: 0, y: 0, z: 1))
 
-            PlanetInfoPanel(
-                planetID: configuration.id,
-                onPrevious: { model.focusPrevious() },
-                onNext: { model.focusNext() },
-                onClose: { model.closeFocus() })
+            // Every planet used to carry its own panel and fade it in and
+            // out, so the text cross-fades here rather than swapping in a
+            // single frame. The panel's size never changes, so overlapping
+            // the two costs the layout nothing.
+            ZStack {
+                PlanetInfoPanel(
+                    planetID: configuration.id,
+                    onPrevious: { model.focusPrevious() },
+                    onNext: { model.focusNext() },
+                    onClose: { model.closeFocus() })
+                .id(configuration.id)
+                .transition(.opacity)
+            }
             // `scaleEffect` alone wouldn't widen the space the panel is
             // given, so the frame reserves the enlarged size the layout
             // needs to keep the planet clear of it.
