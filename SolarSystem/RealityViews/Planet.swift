@@ -8,65 +8,36 @@
 import SwiftUI
 import RealityKit
 
-/// The RealityView for a single planet.
+/// The RealityView for a single planet orbiting the Sun.
 ///
-/// Builds and updates a `PlanetEntity`, wires up the pinch-to-focus gesture
-/// on its selection ring, and places its info panel beside the planet once
-/// it's focused.
+/// Builds and updates a `PlanetEntity` and wires up the pinch-to-focus
+/// gesture on its selection ring. The focused planet itself is drawn by
+/// `PlanetFocusLayout`, not here.
 struct Planet: View {
     @Environment(AppModel.self) private var model
 
     var configuration: PlanetEntity.Configuration
-    var focusStage: Entity?
 
     @State private var planetEntity: PlanetEntity?
 
-    private var isFocused: Bool {
-        model.focusedPlanetID == configuration.id
-    }
-
     var body: some View {
-        RealityView { content, _ in
+        RealityView { content in
             let planetEntity = await PlanetEntity(configuration: configuration)
             content.add(planetEntity)
             self.planetEntity = planetEntity
 
-        } update: { _, attachments in
-            guard let planetEntity else { return }
-            planetEntity.update(configuration: configuration, animateUpdates: true)
-
-            guard let focusStage, let panel = attachments.entity(for: PlanetInfoPanel.attachmentID) else { return }
-            planetEntity.setFocused(isFocused, stage: focusStage)
-
-            if isFocused {
-                if panel.parent !== focusStage {
-                    focusStage.addChild(panel)
-                }
-                panel.position = [PlanetEntity.focusPanelOffset, 0, 0]
-                panel.scale = SIMD3(repeating: PlanetEntity.focusPanelScale)
-            }
-
-        } attachments: {
-            Attachment(id: PlanetInfoPanel.attachmentID) {
-                PlanetInfoPanel(
-                    planetID: configuration.id,
-                    onPrevious: { model.focusPrevious() },
-                    onNext: { model.focusNext() },
-                    onClose: { model.closeFocus() })
-                .opacity(isFocused ? 1 : 0)
-                .allowsHitTesting(isFocused)
-            }
+        } update: { _ in
+            planetEntity?.update(configuration: configuration, animateUpdates: true)
         }
         .gesture(
             SpatialTapGesture()
                 .targetedToAnyEntity()
                 .onEnded { value in
                     guard value.entity.components[PlanetSelectionComponent.self] != nil else { return }
-                    // Only move the stage when focus first opens, so
-                    // Previous/Next keep planets in the same spot. Move it
-                    // before focusing, so the planet flies straight there.
-                    if model.focusedPlanetID == nil, let focusStage {
-                        model.placeFocusStageInFrontOfViewer(focusStage)
+                    // Only move the focus layout when focus first opens, so
+                    // Previous/Next keep it in the same spot.
+                    if model.focusedPlanetID == nil {
+                        model.updateFocusPlacement()
                     }
                     model.focusedPlanetID = configuration.id
                 }

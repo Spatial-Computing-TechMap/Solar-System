@@ -11,10 +11,6 @@ import SwiftUI
 /// selection ring to focus it: a short fact plus Previous/Next/Close
 /// controls for moving between planets.
 struct PlanetInfoPanel: View {
-    /// The id every `Planet` view uses to declare this panel as a
-    /// `RealityView` attachment.
-    static let attachmentID = "planetInfoPanel"
-
     var planetID: PlanetID
     var onPrevious: () -> Void
     var onNext: () -> Void

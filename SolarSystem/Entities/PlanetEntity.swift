@@ -26,8 +26,7 @@ class PlanetEntity: Entity {
     private let orbitPivot = Entity()
     /// Positions the planet at its distance from the Sun.
     private let radiusOffset = Entity()
-    /// Holds the planet's axial tilt. This is the entity that gets
-    /// reparented into the focus stage when someone selects this planet.
+    /// Holds the planet's axial tilt.
     private let equatorialPlane = Entity()
     /// Spins around the tilted axis to create the planet's rotation.
     private let rotator = Entity()
@@ -56,7 +55,6 @@ class PlanetEntity: Entity {
     // `id: UInt64` that a subclass can't override.
     let planetID: PlanetID
     private var configuration: Configuration
-    private var isFocused = false
 
     // MARK: - Initializers
 
@@ -94,9 +92,10 @@ class PlanetEntity: Entity {
         // it again, or the planet's orbit progress would reset every time.
         orbitPivot.orientation = .init(angle: Float(configuration.initialOrbitAngle.radians), axis: [0, 1, 0])
 
-        // Set the planet's axial tilt once. It doesn't change after
-        // creation, so `setFocused(...)` can reapply this same value when
-        // it reparents `equatorialPlane` without fighting `update(...)`.
+        // Set the planet's axial tilt once -- it doesn't change after
+        // creation. The focused copy of a planet leaves this at zero and
+        // lets `rotation3DLayout` tilt it instead, so the layout can
+        // reserve room for the tilted result.
         equatorialPlane.orientation = Self.tiltOrientation(configuration.axialTilt)
 
         // Load this planet's model.
@@ -132,15 +131,14 @@ class PlanetEntity: Entity {
     func update(configuration: Configuration, animateUpdates: Bool) {
         self.configuration = configuration
 
-        // Hides this entire planet (model, orbit path, hit target) while a
-        // different planet is focused. This entity's own focused content
-        // has already been reparented into the shared focus stage by
-        // `setFocused(...)` and isn't affected by `isEnabled` here.
+        // Hides this entire planet (model, orbit path, hit target) while
+        // any planet is focused -- including this one, whose focused copy
+        // `PlanetFocusLayout` builds and owns separately.
         isEnabled = !configuration.isHidden
 
         radiusOffset.position = [0, 0, configuration.orbitRadius]
 
-        setRotationSpeed(isFocused ? 0 : configuration.currentRevolutionSpeed, on: orbitPivot)
+        setRotationSpeed(configuration.currentRevolutionSpeed, on: orbitPivot)
         setRotationSpeed(configuration.currentRotationSpeed, on: rotator)
 
         switch configuration.modelKind {
@@ -171,54 +169,13 @@ class PlanetEntity: Entity {
     /// natural size -- so tiny Mercury and huge Jupiter both read clearly
     /// at a glance instead of the focused planet's size varying wildly.
     static let focusDisplayRadius: Float = 0.35
-    /// How much the info panel is enlarged while focused, so its text reads
-    /// comfortably next to the enlarged planet.
-    static let focusPanelScale: Float = 1.4
-    /// Half the focused panel's width in meters: `PlanetInfoPanel` is 760
-    /// points wide (about 0.56 m), times `focusPanelScale`.
-    static let focusPanelHalfWidth: Float = 0.28 * focusPanelScale
-    /// Where the info panel's center offsets from a focused planet's center,
-    /// leaving a small gap so the two sit side by side as roughly equal
-    /// halves of the view.
-    static let focusPanelOffset: Float = focusDisplayRadius + 0.1 + focusPanelHalfWidth
-
-    /// How much bigger (or smaller) this planet gets scaled to reach
-    /// `focusDisplayRadius` once focused.
-    private var focusScale: Float {
-        Self.focusDisplayRadius / max(configuration.ringRadius, 0.05)
-    }
-
-    /// Animates the planet in or out of a fixed "focus" position so it can
-    /// appear side-by-side with its info panel, and pauses its revolution
-    /// around the Sun while focused.
-    ///
-    /// - Parameters:
-    ///   - focused: Whether this planet should be in the focus stage.
-    ///   - stage: The shared entity that hosts the currently focused planet.
-    ///   - animated: Whether to animate the transition.
-    func setFocused(_ focused: Bool, stage: Entity, animated: Bool = true) {
-        guard focused != isFocused else { return }
-        isFocused = focused
-
-        let newParent = focused ? stage : radiusOffset
-        newParent.addChild(equatorialPlane, preservingWorldTransform: true)
-
-        // The target keeps the planet's axial tilt but resets its position
-        // relative to the new parent, so it lands centered on the stage (or
-        // back at its normal orbit offset). Focused planets also scale up
-        // to a consistent, clearly visible size.
-        let scale: Float = focused ? focusScale : 1
-        let target = Transform(
-            scale: SIMD3(repeating: scale),
-            rotation: Self.tiltOrientation(configuration.axialTilt),
-            translation: .zero)
-        if animated {
-            equatorialPlane.move(to: target, relativeTo: newParent, duration: 0.6)
-        } else {
-            equatorialPlane.move(to: target, relativeTo: newParent)
-        }
-
-        setRotationSpeed(focused ? 0 : configuration.currentRevolutionSpeed, on: orbitPivot)
+    /// How much bigger (or smaller) a planet gets scaled to reach
+    /// `focusDisplayRadius` once focused. `PlanetFocusLayout` applies this
+    /// to the copy of the planet it builds; where the panel then goes is
+    /// left to `HStackLayout`, which measures the scaled result rather than
+    /// assuming every planet ends up the same width.
+    static func focusScale(for configuration: Configuration) -> Float {
+        focusDisplayRadius / max(configuration.ringRadius, 0.05)
     }
 
     // MARK: - Model loading
