@@ -106,7 +106,8 @@ class AppModel {
 
     /// How long a planet takes to arrive in, or leave, the focus layout --
     /// the duration the planet used to spend flying there.
-    static let focusTransition: Animation = .easeInOut(duration: 0.6)
+    static let focusDuration: TimeInterval = 0.6
+    static let focusTransition: Animation = .easeInOut(duration: focusDuration)
 
     func focusNext() {
         withAnimation(Self.focusTransition) {
